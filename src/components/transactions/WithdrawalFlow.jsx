@@ -563,6 +563,9 @@ export default function WithdrawalFlow({ step, plan, participant, form, set, onN
         )}
 
         <div className="txn-actions">
+          <button type="button" className="btn btn-ghost" onClick={cancelRequest}>
+            Cancel
+          </button>
           <button
             type="button"
             className="btn btn-primary"
@@ -573,9 +576,6 @@ export default function WithdrawalFlow({ step, plan, participant, form, set, onN
             }}
           >
             Continue
-          </button>
-          <button type="button" className="btn btn-ghost" onClick={cancelRequest}>
-            Cancel
           </button>
         </div>
         {dialogs}
@@ -679,11 +679,11 @@ export default function WithdrawalFlow({ step, plan, participant, form, set, onN
         )}
         {notesBar}
         <div className="txn-actions">
-          <button type="button" className="btn btn-primary" disabled={!ok} onClick={onNext}>
-            Continue
-          </button>
           <button type="button" className="btn btn-ghost" onClick={onBack}>
             Back
+          </button>
+          <button type="button" className="btn btn-primary" disabled={!ok} onClick={onNext}>
+            Continue
           </button>
         </div>
         {dialogs}
@@ -702,6 +702,9 @@ export default function WithdrawalFlow({ step, plan, participant, form, set, onN
           <DocBlock key={d.id} doc={d} state={w.docs[d.id] || { method: 'docusign' }} error={triedDocs ? docErr(d) : ''} onChange={(s) => setW((cur) => ({ docs: { ...cur.docs, [d.id]: s } }))} />
         ))}
         <div className="txn-actions">
+          <button type="button" className="btn btn-ghost" onClick={onBack}>
+            Back
+          </button>
           <button
             type="button"
             className="btn btn-primary"
@@ -711,9 +714,6 @@ export default function WithdrawalFlow({ step, plan, participant, form, set, onN
             }}
           >
             Continue
-          </button>
-          <button type="button" className="btn btn-ghost" onClick={onBack}>
-            Back
           </button>
         </div>
       </div>
@@ -904,9 +904,6 @@ export default function WithdrawalFlow({ step, plan, participant, form, set, onN
         <span>By checking this box, I declare that I have read the Terms &amp; Conditions.</span>
       </label>
       <div className="txn-actions">
-        <button type="button" className="btn btn-primary" disabled={!w.terms} onClick={onSubmit}>
-          Submit Request
-        </button>
         <button
           type="button"
           className="btn btn-ghost"
@@ -916,6 +913,9 @@ export default function WithdrawalFlow({ step, plan, participant, form, set, onN
           }}
         >
           Back
+        </button>
+        <button type="button" className="btn btn-primary" disabled={!w.terms} onClick={onSubmit}>
+          Submit Request
         </button>
       </div>
       {dialogs}

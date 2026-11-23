@@ -3334,3 +3334,24 @@ summary:focus-visible {
    language as [data-tip], but fixed-position so clipped parents can't hide it. */
 .trunc-tip{position:fixed;transform:translateX(-50%);z-index:200;width:max-content;max-width:var(--core-tooltip-maxWidth);padding:var(--core-space-1) var(--core-space-2);border-radius:var(--core-radius-sm);
   background:var(--neutral-text-default);color:var(--neutral-surface-layer-01);font-size:var(--typography-body-xs-size);font-weight:var(--typography-font-weight-regular);line-height:var(--typography-body-xs-line-height);box-shadow:var(--core-elevation-1);pointer-events:none;white-space:normal;text-align:center}
+
+/* ---------- 200% / 400% zoom: compact, content-first chrome (ADI a11y) ----------
+   Desktop zoom collapses the CSS viewport into the <=640px range, where the
+   sticky header + fixed bottom nav left only a sliver of scrollable content.
+   Header gets compact (48px) with the icon-only logo; both bars slide away on
+   scroll-down and return on scroll-up / focus (useHideChromeOnScroll.js).
+   The demo badge leaves the fixed layer and sits in the page flow. */
+@media(max-width:640px){
+  .topbar{height:48px;padding:0 var(--core-space-3);transition:transform .2s ease}
+  .brand img{height:28px;width:27px;max-width:none;object-fit:cover;object-position:left center}
+  .top-right{gap:var(--core-space-1)}
+  .mobile-nav{transition:transform .2s ease}
+  body.chrome-hidden .topbar{transform:translateY(-100%)}
+  body.chrome-hidden .mobile-nav{transform:translateY(100%)}
+  .demo-switcher{position:relative;right:auto;bottom:auto;display:flex;justify-content:flex-end;padding:var(--core-space-2) var(--core-space-3) calc(var(--mobile-nav-h) + env(safe-area-inset-bottom) + var(--core-space-2))}
+  .demo-switcher-menu{right:var(--core-space-3);bottom:calc(100% - var(--mobile-nav-h))}
+  .layout{padding-bottom:var(--core-space-4)}
+}
+@media(max-width:640px) and (prefers-reduced-motion:reduce){
+  .topbar,.mobile-nav{transition:none}
+}

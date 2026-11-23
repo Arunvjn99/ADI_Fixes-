@@ -168,6 +168,25 @@ export default function Portfolio() {
     }
   }, [period, visible, SERIES])
 
+  // WCAG 1.1.1 text alternative for the line chart: a plain-language
+  // summary of the period plus the same values as an on-demand table.
+  const chartText = useMemo(() => {
+    const rows = SERIES.map((s, i) => {
+      const data = chart.datasets[i]?.data || []
+      return { key: s.key, label: s.label, data, end: data[data.length - 1] ?? 0 }
+    })
+    const pct = (v) => `${v > 0 ? '+' : ''}${Number(v).toFixed(2)}%`
+    const total = rows.find((r) => r.key === 'total')
+    const funds = rows.filter((r) => r.key !== 'total').sort((a, b) => b.end - a.end)
+    const best = funds[0]
+    const worst = funds[funds.length - 1]
+    const summary =
+      `Over the ${PERIOD_LABELS[period]} period, the total portfolio return was ${pct(total?.end ?? 0)}.` +
+      (best ? ` ${best.label} performed best at ${pct(best.end)}` : '') +
+      (worst && worst !== best ? `, and ${worst.label} returned the least at ${pct(worst.end)}.` : '.')
+    return { rows, summary, pct }
+  }, [chart, SERIES, period])
+
   const toggleSeries = (key) => {
     setVisible((v) => {
       if (key === 'total') {
@@ -297,12 +316,12 @@ export default function Portfolio() {
                     </button>
                   ))}
                 </div>
-                <div className="chart-wrap">
+                <div className="chart-wrap" aria-describedby="perf-summary">
                   {/* Same fix as AccountSummary's donut: Chart.js sets
                       role="img" automatically with no label (axe-core:
                       role-img-alt). The holdings table below already has
                       the real per-fund figures. */}
-                  <Line data={chart} options={chartOptions} aria-label="Asset class performance line chart -- see the investments table below for exact figures" />
+                  <Line data={chart} options={chartOptions} aria-label={`Asset class performance line chart, ${PERIOD_LABELS[period]} period`} aria-describedby="perf-summary" />
                 </div>
                 <ChartLegend
                   label="Asset classes"
@@ -316,6 +335,39 @@ export default function Portfolio() {
                   }))}
                   onToggle={toggleSeries}
                 />
+                <div className="perf-summary">
+                  <h3>Performance summary</h3>
+                  <p id="perf-summary">{chartText.summary}</p>
+                </div>
+                <details className="chart-data">
+                  <summary>
+                    <span className="chart-data-title">View chart data</span>
+                    <span className="chart-data-sub">See the return for each asset class over the selected period in a table.</span>
+                  </summary>
+                  <div className="table-wrap">
+                    <table className="chart-data-table">
+                      <caption className="sr-only">Asset class performance, {PERIOD_LABELS[period]} period, cumulative return (%)</caption>
+                      <thead>
+                        <tr>
+                          <th scope="col">Period</th>
+                          {chartText.rows.map((r) => (
+                            <th scope="col" key={r.key} className="num">{r.label}</th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {chart.labels.map((lab, li) => (
+                          <tr key={`${lab}-${li}`}>
+                            <th scope="row">{lab}</th>
+                            {chartText.rows.map((r) => (
+                              <td key={r.key} className="num">{chartText.pct(r.data[li] ?? 0)}</td>
+                            ))}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </details>
               </section>
             </div>
             <section className="section">

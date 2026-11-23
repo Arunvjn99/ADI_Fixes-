@@ -56,9 +56,10 @@ export default function EnrollmentLayout() {
                 }}
                 role={step.to ? 'button' : undefined}
                 tabIndex={step.to ? 0 : undefined}
+                aria-current={isCurrent ? 'step' : undefined}
               >
                 <div className="rail">
-                  <div className="num">{complete ? '✓' : step.n}</div>
+                  <div className="num" aria-hidden="true">{complete ? '✓' : step.n}</div>
                   {step.n < STEPS.length && <i className="rail-line" />}
                 </div>
                 <div className="body">
@@ -67,7 +68,13 @@ export default function EnrollmentLayout() {
                       <h2> below, skipping a heading level -- flagged by
                       axe-core's heading-order rule. A styled <p> keeps the
                       exact same look without claiming a heading role. */}
-                  <p className="step-title">{step.title}</p>
+                  <p className="step-title">
+                    <span className="sr-only">{`Step ${step.n} of ${STEPS.length}: `}</span>
+                    {step.title}
+                  </p>
+                  {/* Compact-layout state label (<=980px / 200-400% zoom), so the
+                      collapsed stepper never reads as bare numbers. */}
+                  <span className="step-state">{complete ? 'Completed' : isCurrent ? 'Current step' : 'Not started'}</span>
                   <p>{step.body}</p>
                   {isCurrent && (
                     <span className="step-status">

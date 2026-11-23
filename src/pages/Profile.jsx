@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { Icon } from '../lib/icons'
 import {
@@ -404,6 +404,22 @@ export default function Profile() {
   const adding = params.get('add') === '1'
   const [record, setRecord] = useState(() => loadProfile(participant))
   const [editing, setEditing] = useState(false)
+  // Keep keyboard focus inside the section being edited (ADI 306716):
+  // Edit -> first field; Save/Cancel -> back to that section's Edit button,
+  // with the outcome announced, instead of focus dropping to <body>.
+  const panelRef = useRef(null)
+  const focusAfter = useRef(null)
+  const [status, setStatus] = useState('')
+  useEffect(() => {
+    const target = focusAfter.current
+    if (!target || !panelRef.current) return
+    focusAfter.current = null
+    const el =
+      target === 'field'
+        ? panelRef.current.querySelector('input:not([type="hidden"]):not([disabled]), select, textarea')
+        : panelRef.current.querySelector('.pr-edit')
+    el?.focus()
+  }, [editing])
   const [draft, setDraft] = useState(null)
   const [showSsn, setShowSsn] = useState(false)
   const [showAccount, setShowAccount] = useState(false)
@@ -445,6 +461,8 @@ export default function Profile() {
 
   const startEdit = () => {
     setDraft({ ...(section === 'personal' ? record.personal : section === 'bank' ? record.bank : record.employment) })
+    setStatus('')
+    focusAfter.current = 'field'
     setEditing(true)
   }
 
@@ -452,6 +470,15 @@ export default function Profile() {
     const key = section
     saveProfileSection(participant.id, key, draft)
     setRecord((p) => ({ ...p, [key]: draft }))
+    focusAfter.current = 'edit'
+    setStatus(`${NAV.find((n) => n.id === key)?.label || 'Section'} saved.`)
+    setEditing(false)
+    setDraft(null)
+  }
+
+  const cancelEdit = () => {
+    focusAfter.current = 'edit'
+    setStatus('Changes discarded.')
     setEditing(false)
     setDraft(null)
   }
@@ -536,7 +563,8 @@ export default function Profile() {
         </nav>
 
         <div className={`pr-main${section === 'classification' ? ' pr-main-wide' : ''}`}>
-          <section className="panel pr-panel">
+          <section className="panel pr-panel" ref={panelRef}>
+            <p className="sr-only" role="status" aria-live="polite">{status}</p>
             {section === 'personal' && (
               <div className="pr-hero">
                 <img src={participant.avatar} alt="" />
@@ -602,7 +630,7 @@ export default function Profile() {
               />
             )}
             {editing && canEdit && (
-              <SaveBar onSave={saveEdit} onCancel={() => { setEditing(false); setDraft(null) }} />
+              <SaveBar onSave={saveEdit} onCancel={cancelEdit} />
             )}
           </section>
         </div>
