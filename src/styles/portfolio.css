@@ -189,17 +189,14 @@
 .holdings-table.sdb-table{min-width:720px}
 .holdings-table.sdb-table td{vertical-align:middle}
 
-/* Chart text alternative (WCAG 1.1.1): summary + expandable data table */
-.perf-summary{margin-top:var(--core-space-4);padding:var(--core-space-3) var(--core-space-4);border-radius:var(--core-radius-sm);background:var(--brand-background-primary-subtle)}
-.perf-summary h3{margin:0 0 var(--core-space-1);font-size:var(--typography-body-md-size);font-weight:var(--typography-font-weight-bold);color:var(--neutral-text-default)}
-.perf-summary p{margin:0;font-size:var(--typography-body-sm-size);line-height:var(--typography-body-sm-line-height);color:var(--neutral-text-default)}
-.chart-data{margin-top:var(--core-space-3);border:1px solid var(--neutral-border-light);border-radius:var(--core-radius-sm)}
-.chart-data summary{cursor:pointer;padding:var(--core-space-3) var(--core-space-4);display:flex;flex-direction:column;gap:var(--core-space-1)}
-.chart-data summary:focus-visible{outline:var(--core-focusRing-width) solid var(--cds-focus-color);outline-offset:var(--core-focusRing-offset);border-radius:var(--core-radius-sm)}
-.chart-data-title{font-weight:var(--typography-font-weight-bold);color:var(--neutral-text-default)}
-.chart-data-sub{font-size:var(--typography-body-xs-size);color:var(--neutral-text-subtle)}
-.chart-data .table-wrap{overflow-x:auto;padding:0 var(--core-space-4) var(--core-space-4)}
-.chart-data-table{width:100%;border-collapse:collapse;font-size:var(--typography-body-sm-size)}
-.chart-data-table th,.chart-data-table td{padding:var(--core-space-2) var(--core-space-3);border-bottom:1px solid var(--neutral-border-light);text-align:left;white-space:nowrap}
-.chart-data-table .num{text-align:right;font-variant-numeric:tabular-nums}
-.chart-data-table thead th{font-weight:var(--typography-font-weight-semibold);color:var(--neutral-text-subtle)}
+/* Chart text alternative (WCAG 1.1.1): plain-language summary.
+   Neutral layer surface + default text so contrast holds in both themes
+   (the old brand-subtle navy fill dimmed body text in dark mode). */
+.perf-summary{margin-top:var(--core-space-4);padding:var(--core-space-4);border-radius:var(--core-radius-sm);
+  background:var(--neutral-surface-layer-02);border:1px solid var(--neutral-border-light);border-left:4px solid var(--brand-border-primary-default);color:var(--neutral-text-default)}
+.perf-summary h3{margin:0 0 var(--core-space-2);font-size:var(--typography-body-lg-size);line-height:var(--typography-body-lg-line-height);font-weight:var(--typography-font-weight-bold);color:var(--neutral-text-default)}
+.perf-summary p{margin:0;font-size:var(--typography-body-md-size);line-height:var(--typography-body-md-relaxed-line-height,1.6);color:var(--neutral-text-default)}
+.perf-summary strong{font-weight:var(--typography-font-weight-bold)}
+.perf-summary ul{margin:var(--core-space-2) 0 0;padding-left:var(--core-space-5);display:flex;flex-direction:column;gap:var(--core-space-1);
+  font-size:var(--typography-body-md-size);line-height:var(--typography-body-md-line-height);color:var(--neutral-text-default)}
+.perf-k{font-weight:var(--typography-font-weight-semibold)}

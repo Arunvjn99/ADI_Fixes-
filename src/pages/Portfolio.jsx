@@ -168,23 +168,27 @@ export default function Portfolio() {
     }
   }, [period, visible, SERIES])
 
-  // WCAG 1.1.1 text alternative for the line chart: a plain-language
-  // summary of the period plus the same values as an on-demand table.
+  // WCAG 1.1.1 text alternative for the line chart: one plain-language
+  // summary that conveys the same takeaway the chart shows (overall result,
+  // strongest and weakest asset class, for the selected period).
   const chartText = useMemo(() => {
+    const PERIOD_WORDS = { '1m': 'the last month', '3m': 'the last 3 months', '6m': 'the last 6 months', ytd: 'this year to date', '1y': 'the last year', '3y': 'the last 3 years', '5y': 'the last 5 years', '10y': 'the last 10 years' }
     const rows = SERIES.map((s, i) => {
       const data = chart.datasets[i]?.data || []
-      return { key: s.key, label: s.label, data, end: data[data.length - 1] ?? 0 }
+      return { key: s.key, label: s.label, end: data[data.length - 1] ?? 0 }
     })
-    const pct = (v) => `${v > 0 ? '+' : ''}${Number(v).toFixed(2)}%`
-    const total = rows.find((r) => r.key === 'total')
+    const pct = (v) => `${Math.abs(Number(v)).toFixed(2)}%`
+    const move = (v) => (v >= 0 ? `grew ${pct(v)}` : `fell ${pct(v)}`)
+    const total = rows.find((r) => r.key === 'total')?.end ?? 0
     const funds = rows.filter((r) => r.key !== 'total').sort((a, b) => b.end - a.end)
     const best = funds[0]
     const worst = funds[funds.length - 1]
-    const summary =
-      `Over the ${PERIOD_LABELS[period]} period, the total portfolio return was ${pct(total?.end ?? 0)}.` +
-      (best ? ` ${best.label} performed best at ${pct(best.end)}` : '') +
-      (worst && worst !== best ? `, and ${worst.label} returned the least at ${pct(worst.end)}.` : '.')
-    return { rows, summary, pct }
+    return {
+      period: PERIOD_WORDS[period] || PERIOD_LABELS[period],
+      total: move(total),
+      best: best && `${best.label} ${move(best.end)}`,
+      worst: worst && worst !== best && `${worst.label} ${move(worst.end)}`
+    }
   }, [chart, SERIES, period])
 
   const toggleSeries = (key) => {
@@ -316,7 +320,7 @@ export default function Portfolio() {
                     </button>
                   ))}
                 </div>
-                <div className="chart-wrap" aria-describedby="perf-summary">
+                <div className="chart-wrap">
                   {/* Same fix as AccountSummary's donut: Chart.js sets
                       role="img" automatically with no label (axe-core:
                       role-img-alt). The holdings table below already has
@@ -335,39 +339,16 @@ export default function Portfolio() {
                   }))}
                   onToggle={toggleSeries}
                 />
-                <div className="perf-summary">
+                <div className="perf-summary" id="perf-summary">
                   <h3>Performance summary</h3>
-                  <p id="perf-summary">{chartText.summary}</p>
+                  <p>
+                    Over {chartText.period}, your total portfolio <strong>{chartText.total}</strong>.
+                  </p>
+                  <ul>
+                    {chartText.best && <li><span className="perf-k">Best performer:</span> {chartText.best}</li>}
+                    {chartText.worst && <li><span className="perf-k">Lowest performer:</span> {chartText.worst}</li>}
+                  </ul>
                 </div>
-                <details className="chart-data">
-                  <summary>
-                    <span className="chart-data-title">View chart data</span>
-                    <span className="chart-data-sub">See the return for each asset class over the selected period in a table.</span>
-                  </summary>
-                  <div className="table-wrap">
-                    <table className="chart-data-table">
-                      <caption className="sr-only">Asset class performance, {PERIOD_LABELS[period]} period, cumulative return (%)</caption>
-                      <thead>
-                        <tr>
-                          <th scope="col">Period</th>
-                          {chartText.rows.map((r) => (
-                            <th scope="col" key={r.key} className="num">{r.label}</th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {chart.labels.map((lab, li) => (
-                          <tr key={`${lab}-${li}`}>
-                            <th scope="row">{lab}</th>
-                            {chartText.rows.map((r) => (
-                              <td key={r.key} className="num">{chartText.pct(r.data[li] ?? 0)}</td>
-                            ))}
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </details>
               </section>
             </div>
             <section className="section">
