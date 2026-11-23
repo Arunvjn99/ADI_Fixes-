@@ -3,10 +3,8 @@ import Header from './Header.jsx'
 import Sidebar from './Sidebar.jsx'
 import Footer from './Footer.jsx'
 import DemoScenarioSwitcher from './DemoScenarioSwitcher.jsx'
-import useHideChromeOnScroll from '../../hooks/useHideChromeOnScroll.js'
 
 export default function AppLayout() {
-  useHideChromeOnScroll()
   return (
     <>
       <a className="skip-link" href="#main-content">

@@ -9,11 +9,12 @@ export default function useHideChromeOnScroll() {
   useEffect(() => {
     const body = document.body
     let lastY = window.scrollY
-    let ticking = false
     const THRESHOLD = 8
 
-    const update = () => {
-      ticking = false
+    // Runs straight in the (passive) scroll handler: the work is a couple of
+    // property reads + one classList toggle, and an rAF gate could get stuck
+    // with ticking=true if a frame was skipped, freezing the bars.
+    const onScroll = () => {
       const y = window.scrollY
       const delta = y - lastY
       if (Math.abs(delta) < THRESHOLD) return
@@ -21,12 +22,6 @@ export default function useHideChromeOnScroll() {
       if (delta > 0 && y > 64 && !chromeHasFocus) body.classList.add('chrome-hidden')
       else body.classList.remove('chrome-hidden')
       lastY = y
-    }
-    const onScroll = () => {
-      if (!ticking) {
-        ticking = true
-        requestAnimationFrame(update)
-      }
     }
     const onFocusIn = (e) => {
       if (e.target.closest?.('.topbar, .mobile-nav, .mobile-menu-bg')) body.classList.remove('chrome-hidden')

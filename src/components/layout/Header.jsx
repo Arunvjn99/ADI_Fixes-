@@ -5,11 +5,15 @@ import { faQuestionCircle, faSignOutAlt, faMoon, faKey, faSun } from '@fortaweso
 import { useParticipant } from '../../context/ParticipantContext.jsx'
 import { useTheme } from '../../context/ThemeContext.jsx'
 import { BRAND } from '../../config/brand.js'
+import useHideChromeOnScroll from '../../hooks/useHideChromeOnScroll.js'
 
 export default function Header() {
   const { participant, logout } = useParticipant()
   const { theme, toggle } = useTheme()
   const navigate = useNavigate()
+  // Lives here (not AppLayout) so every shell that renders the header --
+  // AppLayout, EnrollmentLayout, TransactionRequest -- gets hide-on-scroll.
+  useHideChromeOnScroll()
   const [open, setOpen] = useState(false)
   const menuRef = useRef(null)
 

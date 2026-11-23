@@ -216,7 +216,7 @@ function TransactionRequestWizard() {
       return
     }
     const id = requestAnimationFrame(() => {
-      const h = mainRef.current?.querySelector('h2, h3')
+      const h = mainRef.current?.querySelector('.txn-card h3, .txn-card h2') || mainRef.current?.querySelector('h2, h3')
       if (!h) return
       if (!h.hasAttribute('tabindex')) h.setAttribute('tabindex', '-1')
       h.focus({ preventScroll: true })
