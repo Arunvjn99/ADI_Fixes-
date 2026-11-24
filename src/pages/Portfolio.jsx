@@ -327,6 +327,16 @@ export default function Portfolio() {
                       the real per-fund figures. */}
                   <Line data={chart} options={chartOptions} aria-label={`Asset class performance line chart, ${PERIOD_LABELS[period]} period`} aria-describedby="perf-summary" />
                 </div>
+                <div className="perf-summary" id="perf-summary">
+                  <h3>Performance summary</h3>
+                  <p>
+                    Over {chartText.period}, your total portfolio <strong>{chartText.total}</strong>.
+                  </p>
+                  <ul>
+                    {chartText.best && <li><span className="perf-k">Best performer:</span> {chartText.best}</li>}
+                    {chartText.worst && <li><span className="perf-k">Lowest performer:</span> {chartText.worst}</li>}
+                  </ul>
+                </div>
                 <ChartLegend
                   label="Asset classes"
                   items={SERIES.map((s) => ({
@@ -339,16 +349,6 @@ export default function Portfolio() {
                   }))}
                   onToggle={toggleSeries}
                 />
-                <div className="perf-summary" id="perf-summary">
-                  <h3>Performance summary</h3>
-                  <p>
-                    Over {chartText.period}, your total portfolio <strong>{chartText.total}</strong>.
-                  </p>
-                  <ul>
-                    {chartText.best && <li><span className="perf-k">Best performer:</span> {chartText.best}</li>}
-                    {chartText.worst && <li><span className="perf-k">Lowest performer:</span> {chartText.worst}</li>}
-                  </ul>
-                </div>
               </section>
             </div>
             <section className="section">
