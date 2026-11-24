@@ -840,3 +840,18 @@ button.opt { width:100%; text-align:left; color:inherit; appearance:none; -webki
 .pr-table.inv-table tr.inv-sdb-row td{background:var(--neutral-surface-layer-03)}
 .inv-sdb-row .text-link{font-size:inherit}
 
+
+/* Deferral rate page -- alignment per Figma reference.
+   One shared form column (max 1016px) for the deferral card, Opt out link,
+   auto-increase choice cards and increment-cycle cards, so their right edges
+   line up; the section divider and the increment table keep the full width.
+   Cycle cards are three equal columns filling that column (was auto-fill
+   180px tracks, which left them narrow and wrapping). */
+.detail-body.enroll-simple .enroll-narrow,
+.detail-body.enroll-simple .ai-block .choice-list,
+.detail-body.enroll-simple .ai-block .cycle-cards{max-width:1016px}
+.detail-body.enroll-simple .cycle-cards{grid-template-columns:repeat(3,minmax(0,1fr))}
+.detail-body.enroll-simple .enroll-form .shelp{max-width:640px}
+@media(max-width:860px){
+  .detail-body.enroll-simple .cycle-cards{grid-template-columns:1fr}
+}
