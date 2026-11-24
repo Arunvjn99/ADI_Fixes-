@@ -48,6 +48,7 @@ import {
   transactablePlans
 } from '../data/transactions.js'
 import '../styles/transactions.css'
+import Footer from '../components/layout/Footer.jsx'
 
 const WIZARDS = {
   loan: {
@@ -370,6 +371,7 @@ function TransactionRequestWizard() {
           so "Back to Transactions" reads as dismissing a confirmation, not
           navigating away from content that's already gone. */}
       {done && <SubmittedPanel type={type} transactionId={transactionId} navigate={navigate} />}
+      <Footer />
     </>
   )
 }

@@ -2,6 +2,7 @@ import { Link, Outlet, useLocation, useNavigate, useSearchParams } from 'react-r
 import Header from './Header.jsx'
 import Sidebar from './Sidebar.jsx'
 import '../../styles/enrollment.css'
+import Footer from './Footer.jsx'
 
 const STEPS = [
   { n: 1, title: 'Deferral rate', body: 'Specify payroll deferral rates and set up auto increase.', to: '/enrollment' },
@@ -99,6 +100,7 @@ export default function EnrollmentLayout() {
           <Outlet />
         </main>
       </div>
+      <Footer />
     </>
   )
 }
