@@ -1,6 +1,7 @@
 import { Link, Outlet, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import Header from './Header.jsx'
 import Sidebar from './Sidebar.jsx'
+import MobileStepper from '../common/MobileStepper.jsx'
 import '../../styles/enrollment.css'
 import Footer from './Footer.jsx'
 
@@ -86,6 +87,12 @@ export default function EnrollmentLayout() {
               </div>
             )
           })}
+          <MobileStepper
+            steps={STEPS.map((s) => ({ id: s.n, title: s.title }))}
+            current={current - 1}
+            isEnabled={(i) => !!STEPS[i].to}
+            onSelect={(i) => navigate({ pathname: STEPS[i].to, search })}
+          />
         </aside>
         <main className="main">
           <div className="detail-head">
