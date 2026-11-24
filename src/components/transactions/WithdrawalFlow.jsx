@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Icon } from '../../lib/icons'
-import { faExclamationTriangle, faInfoCircle, faCheck, faPen, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faExclamationTriangle, faInfoCircle, faChevronDown, faCheck, faPen, faTrash } from '@fortawesome/free-solid-svg-icons'
 import Slideover from '../common/Slideover.jsx'
 import ConfirmDialog from '../common/ConfirmDialog.jsx'
 import Field, { FieldGroup } from '../common/Field.jsx'
